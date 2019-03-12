@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" id="WebApp_9" version="2.4">
+ 
+ <!-- 配置核心入口servlet -->
+  <servlet>
+    <servlet-name>mvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <!-- 指定springmvc配置文件位置 -->
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:/applicationSpring_mvc.xml</param-value>
+    </init-param>
+    <!-- 指定启动服务器创建 -->
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <!-- 指定具有springmvc风格的网络请求 -->
+  <servlet-mapping>
+    <servlet-name>mvc</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  
+  <!-- 指定spring工厂配置文件位置 -->
+  <context-param>
+   <param-name>contextConfigLocation</param-name>
+   <param-value>classpath:/applicationContext_ems.xml</param-value>
+  </context-param>
+  
+  <!-- 初始化工厂监听器 -->
+  <listener>
+   <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>  
+  
+	<!--  字符编码过滤  -->
+	<filter>
+	  	<filter-name>CharacterEncodingFilter</filter-name>
+	  	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+	  	<init-param>
+	  		<param-name>encoding</param-name>
+	  		<param-value>utf-8</param-value>
+	  	</init-param>
+  </filter>
+  <filter-mapping>
+	  <filter-name>CharacterEncodingFilter</filter-name>
+	  <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  
+</web-app>

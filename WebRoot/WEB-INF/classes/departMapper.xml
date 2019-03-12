@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.sias.dao.DepartDao">
+
+<!-- id 查询 -->
+<select id="queryById" resultType="Departments">
+select id,name,note from m_departments where id=#{id}
+</select>
+
+<!--查所有 -->
+<select id="findAll" resultType="Departments">
+select id,name,note from m_departments
+</select>
+
+<!-- 修改 -->
+<update id="updById">
+update m_departments
+set name=#{name},note=#{note}
+where id=#{id}
+</update>
+
+<!-- 添加部门 -->
+<insert id="insertDep">
+<selectKey resultType="String" keyProperty="id" order="BEFORE">
+   select m_dep_seq.nextval from dual
+  </selectKey>
+  insert into m_departments
+  values(#{id},#{name},#{note})
+</insert>
+
+
+<!-- 查询name=str的数量 -->
+<select id="queryTol" resultType="int">
+select count(*) from  m_departments where name like '%'||#{str}||'%'
+</select>
+
+<!-- 分页 模糊查询 -->
+<select id="querySome" resultType="Departments">
+<![CDATA[
+select d.* from 
+(select id,name,note,rownum rw 
+from m_departments where rownum<=#{pb.end} and name like '%'||#{str}||'%')d
+where rw between #{pb.begin} and #{pb.end}
+]]>
+</select>
+
+
+
+<!-- 查询总条数  部门 -->
+<select id="queryTotal" resultType="int">
+ select count(*) from  m_departments
+</select>
+
+<!-- 分页所有部门 -->
+<select id="queryAll" resultType="Departments">
+<![CDATA[
+select d.* from 
+(select id,name,note ,rownum rw 
+from m_departments where rownum<=#{end})d
+where rw between #{begin} and #{end}
+]]>
+</select>
+
+
+<!-- 查询总条数 did下的员工 -->
+<select id="queryCount" resultType="int">
+ select count(*) from m_employees where did=#{id}
+</select>
+
+<!-- 分页 查询同一部门下所有员工 -->
+<select id="queryThis" resultMap="em">
+<![CDATA[
+select d.* from
+(select e.id id,e.name,e.salary,e.age,p.id pid,p.name pname,
+rownum rw 
+from m_employees e join m_departments p
+on e.did=p.id
+where rownum <=#{pb.end} and p.id=#{id})d
+where rw between #{pb.begin} and #{pb.end}
+]]>
+</select>
+
+<resultMap type="com.sias.entity.Employees" id="em">
+  <id column="id" property="id"/>
+  <result column="name" property="name"/>
+  <result column="salary" property="salary"/>
+  <result column="age" property="age"/>
+  
+  <association property="departments" javaType="com.sias.entity.Departments">
+  <id column="pid" property="id"/>
+   <result column="pname" property="name"/>  
+  </association>
+</resultMap>
+
+</mapper>

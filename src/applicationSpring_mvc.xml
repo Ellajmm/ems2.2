@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+http://www.springframework.org/schema/mvc 
+http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+ 
+ ">
+
+	<!--开启spring控制器注解@Controller扫描 -->
+	<context:component-scan base-package="com.sias.controller"></context:component-scan>
+
+	<!--开启springmvc框架注解的驱动 -->
+	<mvc:annotation-driven />
+
+	<!--视图解析器 -->
+	<bean id="irvr"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!--匹配前缀 -->
+		<property name="prefix" value="/"></property>
+		<!--匹配后缀 -->
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<!-- 配置拦截器 -->
+	<mvc:interceptors>
+		
+		<!--配置一个拦截器-->
+		<mvc:interceptor>
+		<!--配置要拦截的方法(/**表拦所有） -->
+			<mvc:mapping path="/**" />
+		<!--排除不要拦截的方法 -->
+		    <mvc:exclude-mapping path="/user/login.do"/>
+		    <mvc:exclude-mapping path="/user/regist.do"/>
+		    <mvc:exclude-mapping path="/user/checkName.do"/>
+		    <mvc:exclude-mapping path="/cap/generateCaptcha.do"/> 
+		 <!-- 指定拦截器实现的全限定名 -->
+		    <bean class="com.sias.inteceptor.MyInterceptor"></bean>
+		</mvc:interceptor>
+
+
+	</mvc:interceptors>
+
+</beans>

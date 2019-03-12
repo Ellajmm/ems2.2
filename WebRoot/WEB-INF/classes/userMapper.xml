@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.sias.dao.UserDao">
+
+<!-- id+name查询 -->
+<select id="queryByNameAndPwd" resultType="User">
+select id,name,realName,password,sex 
+from m_user
+where name=#{name} and password=#{password}
+</select>
+
+<!-- addUser -->
+<insert id="addUser">
+ <selectKey resultType="String" keyProperty="id" order="BEFORE">
+   select m_user_seq.nextval from dual
+  </selectKey>
+ insert into m_user 
+ values(#{id},#{name},#{realName},#{password},#{sex})
+</insert>
+
+<!-- name查询 -->
+<select id="queryByName" resultType="User">
+select id,name,realName,password,sex 
+from m_user
+where name=#{name}
+</select>
+
+</mapper>
